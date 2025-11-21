@@ -75,4 +75,10 @@ export const properties: Record<string, PropertyProps> = {
       href: '../toBigint/',
     },
   },
+  message: {
+    type: {
+      type: 'custom',
+      name: 'TMessage',
+    },
+  },
 };

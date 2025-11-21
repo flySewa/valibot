@@ -5,6 +5,33 @@ export const properties: Record<string, PropertyProps> = {
     modifier: 'extends',
     type: 'any',
   },
+  TMessage: {
+    modifier: 'extends',
+    type: {
+      type: 'union',
+      options: [
+        {
+          type: 'custom',
+          name: 'ErrorMessage',
+          href: '../ErrorMessage/',
+          generics: [
+            {
+              type: 'custom',
+              name: 'ToNumberIssue',
+              href: '../ToNumberIssue/',
+              generics: [
+                {
+                  type: 'custom',
+                  name: 'TInput',
+                },
+              ],
+            },
+          ],
+        },
+        'undefined',
+      ],
+    },
+  },
   BaseTransformation: {
     modifier: 'extends',
     type: {
@@ -17,7 +44,17 @@ export const properties: Record<string, PropertyProps> = {
           name: 'TInput',
         },
         'number',
-        'never',
+        {
+          type: 'custom',
+          name: 'ToNumberIssue',
+          href: '../ToNumberIssue/',
+          generics: [
+            {
+              type: 'custom',
+              name: 'TInput',
+            },
+          ],
+        },
       ],
     },
   },
@@ -33,6 +70,12 @@ export const properties: Record<string, PropertyProps> = {
       modifier: 'typeof',
       name: 'toNumber',
       href: '../toNumber/',
+    },
+  },
+  message: {
+    type: {
+      type: 'custom',
+      name: 'TMessage',
     },
   },
 };

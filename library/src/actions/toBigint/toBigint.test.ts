@@ -70,11 +70,98 @@ describe('toBigint', () => {
       kind: 'transformation',
       type: 'to_bigint',
       expected: null,
+      requirement: undefined,
+      path: undefined,
+      issues: undefined,
+      lang: undefined,
+      abortEarly: undefined,
+      abortPipeEarly: undefined,
     };
 
-    test('for invalid inputs', () => {
+    // Primitive types
+
+    test('for null', () => {
+      const value = null;
+      expect(action['~run']({ typed: true, value }, {})).toStrictEqual({
+        typed: false,
+        value,
+        issues: [
+          {
+            ...baseIssue,
+            input: value,
+            received: 'null',
+            message: 'Invalid bigint: Received null',
+          },
+        ],
+      });
+    });
+
+    test('for numbers', () => {
+      const value = 123.45;
+      expect(action['~run']({ typed: true, value }, {})).toStrictEqual({
+        typed: false,
+        value,
+        issues: [
+          {
+            ...baseIssue,
+            input: value,
+            received: '123.45',
+            message: 'Invalid bigint: Received 123.45',
+          },
+        ],
+      });
+    });
+
+    test('for NaN', () => {
+      const value = NaN;
+      expect(action['~run']({ typed: true, value }, {})).toStrictEqual({
+        typed: false,
+        value,
+        issues: [
+          {
+            ...baseIssue,
+            input: value,
+            received: 'NaN',
+            message: 'Invalid bigint: Received NaN',
+          },
+        ],
+      });
+    });
+
+    test('for Infinity', () => {
+      const value = Infinity;
+      expect(action['~run']({ typed: true, value }, {})).toStrictEqual({
+        typed: false,
+        value,
+        issues: [
+          {
+            ...baseIssue,
+            input: value,
+            received: 'Infinity',
+            message: 'Invalid bigint: Received Infinity',
+          },
+        ],
+      });
+    });
+
+    test('for undefined', () => {
+      const value = undefined;
+      expect(action['~run']({ typed: true, value }, {})).toStrictEqual({
+        typed: false,
+        value,
+        issues: [
+          {
+            ...baseIssue,
+            input: value,
+            received: 'undefined',
+            message: 'Invalid bigint: Received undefined',
+          },
+        ],
+      });
+    });
+
+    test('for symbols', () => {
       const value = Symbol();
-      // @ts-expect-error
       expect(action['~run']({ typed: true, value }, {})).toStrictEqual({
         typed: false,
         value,
@@ -84,12 +171,75 @@ describe('toBigint', () => {
             input: value,
             received: 'symbol',
             message: 'Invalid bigint: Received symbol',
-            requirement: undefined,
-            path: undefined,
-            issues: undefined,
-            lang: undefined,
-            abortEarly: undefined,
-            abortPipeEarly: undefined,
+          },
+        ],
+      });
+    });
+
+    // Invalid strings
+
+    test('for decimal strings', () => {
+      const value = '123.45';
+      expect(action['~run']({ typed: true, value }, {})).toStrictEqual({
+        typed: false,
+        value,
+        issues: [
+          {
+            ...baseIssue,
+            input: value,
+            received: '"123.45"',
+            message: 'Invalid bigint: Received "123.45"',
+          },
+        ],
+      });
+    });
+
+    test('for invalid strings', () => {
+      const value = 'abc';
+      expect(action['~run']({ typed: true, value }, {})).toStrictEqual({
+        typed: false,
+        value,
+        issues: [
+          {
+            ...baseIssue,
+            input: value,
+            received: '"abc"',
+            message: 'Invalid bigint: Received "abc"',
+          },
+        ],
+      });
+    });
+
+    // Complex types
+
+    test('for functions', () => {
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      const value = () => {};
+      expect(action['~run']({ typed: true, value }, {})).toStrictEqual({
+        typed: false,
+        value,
+        issues: [
+          {
+            ...baseIssue,
+            input: value,
+            received: 'Function',
+            message: 'Invalid bigint: Received Function',
+          },
+        ],
+      });
+    });
+
+    test('for objects', () => {
+      const value = {};
+      expect(action['~run']({ typed: true, value }, {})).toStrictEqual({
+        typed: false,
+        value,
+        issues: [
+          {
+            ...baseIssue,
+            input: value,
+            received: 'Object',
+            message: 'Invalid bigint: Received Object',
           },
         ],
       });

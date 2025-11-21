@@ -4,11 +4,13 @@ import { toDate, type ToDateAction, type ToDateIssue } from './toDate.ts';
 
 describe('toDate', () => {
   test('should return action object', () => {
-    expectTypeOf(toDate<'123'>()).toEqualTypeOf<ToDateAction<'123'>>();
+    expectTypeOf(toDate<'123'>()).toEqualTypeOf<
+      ToDateAction<'123', undefined>
+    >();
   });
 
   describe('should infer correct types', () => {
-    type Action = ToDateAction<'123'>;
+    type Action = ToDateAction<'123', undefined>;
 
     test('of input', () => {
       expectTypeOf<InferInput<Action>>().toEqualTypeOf<'123'>();

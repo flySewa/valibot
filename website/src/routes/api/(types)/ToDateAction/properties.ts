@@ -5,6 +5,33 @@ export const properties: Record<string, PropertyProps> = {
     modifier: 'extends',
     type: 'any',
   },
+  TMessage: {
+    modifier: 'extends',
+    type: {
+      type: 'union',
+      options: [
+        {
+          type: 'custom',
+          name: 'ErrorMessage',
+          href: '../ErrorMessage/',
+          generics: [
+            {
+              type: 'custom',
+              name: 'ToDateIssue',
+              href: '../ToDateIssue/',
+              generics: [
+                {
+                  type: 'custom',
+                  name: 'TInput',
+                },
+              ],
+            },
+          ],
+        },
+        'undefined',
+      ],
+    },
+  },
   BaseTransformation: {
     modifier: 'extends',
     type: {
@@ -20,7 +47,17 @@ export const properties: Record<string, PropertyProps> = {
           type: 'custom',
           name: 'Date',
         },
-        'never',
+        {
+          type: 'custom',
+          name: 'ToDateIssue',
+          href: '../ToDateIssue/',
+          generics: [
+            {
+              type: 'custom',
+              name: 'TInput',
+            },
+          ],
+        },
       ],
     },
   },
@@ -36,6 +73,12 @@ export const properties: Record<string, PropertyProps> = {
       modifier: 'typeof',
       name: 'toDate',
       href: '../toDate/',
+    },
+  },
+  message: {
+    type: {
+      type: 'custom',
+      name: 'TMessage',
     },
   },
 };

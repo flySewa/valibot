@@ -15,31 +15,41 @@ describe('toBoolean', () => {
   describe('should transform to boolean', () => {
     const action = toBoolean();
 
-    test('for string', () => {
-      expect(action['~run']({ typed: true, value: 'foo' }, {})).toStrictEqual({
+    // Falsy values
+
+    test('for empty strings', () => {
+      expect(action['~run']({ typed: true, value: '' }, {})).toStrictEqual({
         typed: true,
-        value: true,
+        value: false,
       });
     });
 
-    test('for number', () => {
-      expect(action['~run']({ typed: true, value: 1 }, {})).toStrictEqual({
+    test('for zeros', () => {
+      expect(action['~run']({ typed: true, value: 0 }, {})).toStrictEqual({
         typed: true,
-        value: true,
+        value: false,
+      });
+      expect(action['~run']({ typed: true, value: -0 }, {})).toStrictEqual({
+        typed: true,
+        value: false,
+      });
+      expect(action['~run']({ typed: true, value: 0n }, {})).toStrictEqual({
+        typed: true,
+        value: false,
       });
     });
 
-    test('for bigint', () => {
-      expect(action['~run']({ typed: true, value: 1n }, {})).toStrictEqual({
+    test('for NaN numbers', () => {
+      expect(action['~run']({ typed: true, value: NaN }, {})).toStrictEqual({
         typed: true,
-        value: true,
+        value: false,
       });
     });
 
-    test('for boolean', () => {
-      expect(action['~run']({ typed: true, value: true }, {})).toStrictEqual({
+    test('for false booleans', () => {
+      expect(action['~run']({ typed: true, value: false }, {})).toStrictEqual({
         typed: true,
-        value: true,
+        value: false,
       });
     });
 
@@ -59,9 +69,135 @@ describe('toBoolean', () => {
       });
     });
 
-    test('for symbol', () => {
+    // Truthy values
+
+    test('for non-empty strings', () => {
+      expect(action['~run']({ typed: true, value: 'foo' }, {})).toStrictEqual({
+        typed: true,
+        value: true,
+      });
+      expect(action['~run']({ typed: true, value: '0' }, {})).toStrictEqual({
+        typed: true,
+        value: true,
+      });
+      expect(action['~run']({ typed: true, value: 'false' }, {})).toStrictEqual(
+        {
+          typed: true,
+          value: true,
+        }
+      );
+    });
+
+    test('for non-zero numbers', () => {
+      expect(action['~run']({ typed: true, value: 1 }, {})).toStrictEqual({
+        typed: true,
+        value: true,
+      });
+      expect(action['~run']({ typed: true, value: -1 }, {})).toStrictEqual({
+        typed: true,
+        value: true,
+      });
+      expect(
+        action['~run']({ typed: true, value: Infinity }, {})
+      ).toStrictEqual({
+        typed: true,
+        value: true,
+      });
+      expect(
+        action['~run']({ typed: true, value: -Infinity }, {})
+      ).toStrictEqual({
+        typed: true,
+        value: true,
+      });
+    });
+
+    test('for non-zero bigints', () => {
+      expect(action['~run']({ typed: true, value: 1n }, {})).toStrictEqual({
+        typed: true,
+        value: true,
+      });
+      expect(action['~run']({ typed: true, value: -1n }, {})).toStrictEqual({
+        typed: true,
+        value: true,
+      });
+    });
+
+    test('for true booleans', () => {
+      expect(action['~run']({ typed: true, value: true }, {})).toStrictEqual({
+        typed: true,
+        value: true,
+      });
+    });
+
+    test('for symbols', () => {
+      expect(
+        action['~run']({ typed: true, value: Symbol() }, {})
+      ).toStrictEqual({
+        typed: true,
+        value: true,
+      });
       expect(
         action['~run']({ typed: true, value: Symbol('foo') }, {})
+      ).toStrictEqual({
+        typed: true,
+        value: true,
+      });
+    });
+
+    test('for arrays', () => {
+      expect(action['~run']({ typed: true, value: [] }, {})).toStrictEqual({
+        typed: true,
+        value: true,
+      });
+      expect(action['~run']({ typed: true, value: [0] }, {})).toStrictEqual({
+        typed: true,
+        value: true,
+      });
+      expect(action['~run']({ typed: true, value: ['foo'] }, {})).toStrictEqual(
+        {
+          typed: true,
+          value: true,
+        }
+      );
+    });
+
+    test('for functions', () => {
+      expect(
+        action['~run'](
+          {
+            typed: true,
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            value: () => {},
+          },
+          {}
+        )
+      ).toStrictEqual({
+        typed: true,
+        value: true,
+      });
+      expect(
+        action['~run'](
+          {
+            typed: true,
+            value:
+              // eslint-disable-next-line @typescript-eslint/no-empty-function
+              function () {},
+          },
+          {}
+        )
+      ).toStrictEqual({
+        typed: true,
+        value: true,
+      });
+    });
+
+    test('for objects', () => {
+      expect(action['~run']({ typed: true, value: {} }, {})).toStrictEqual({
+        typed: true,
+        value: true,
+      });
+      expect(
+        action['~run']({ typed: true, value: { key: 'value' } }, {})
       ).toStrictEqual({
         typed: true,
         value: true,

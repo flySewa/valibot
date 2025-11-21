@@ -8,11 +8,13 @@ import {
 
 describe('toString', () => {
   test('should return action object', () => {
-    expectTypeOf(toString<'foo'>()).toEqualTypeOf<ToStringAction<'foo'>>();
+    expectTypeOf(toString<'foo'>()).toEqualTypeOf<
+      ToStringAction<'foo', undefined>
+    >();
   });
 
   describe('should infer correct types', () => {
-    type Action = ToStringAction<'foo'>;
+    type Action = ToStringAction<'foo', undefined>;
 
     test('of input', () => {
       expectTypeOf<InferInput<Action>>().toEqualTypeOf<'foo'>();

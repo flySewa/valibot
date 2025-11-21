@@ -6,14 +6,28 @@ import {
 } from './toString.ts';
 
 describe('toString', () => {
-  test('should return action object', () => {
-    expect(toString()).toStrictEqual({
-      kind: 'transformation',
-      type: 'to_string',
-      reference: toString,
-      async: false,
-      '~run': expect.any(Function),
-    } satisfies ToStringAction<unknown>);
+  describe('should return action object', () => {
+    test('without message', () => {
+      expect(toString()).toStrictEqual({
+        kind: 'transformation',
+        type: 'to_string',
+        reference: toString,
+        async: false,
+        message: undefined,
+        '~run': expect.any(Function),
+      } satisfies ToStringAction<unknown, undefined>);
+    });
+
+    test('with message', () => {
+      expect(toString('message')).toStrictEqual({
+        kind: 'transformation',
+        type: 'to_string',
+        reference: toString,
+        async: false,
+        message: 'message',
+        '~run': expect.any(Function),
+      } satisfies ToStringAction<unknown, string>);
+    });
   });
 
   describe('should transform to string', () => {
@@ -81,9 +95,15 @@ describe('toString', () => {
       kind: 'transformation',
       type: 'to_string',
       expected: null,
+      requirement: undefined,
+      path: undefined,
+      issues: undefined,
+      lang: undefined,
+      abortEarly: undefined,
+      abortPipeEarly: undefined,
     };
 
-    test('for invalid inputs', () => {
+    test('for objects with faulty toString', () => {
       const faultyToString = {
         toString() {
           throw new Error('oops');
@@ -100,12 +120,6 @@ describe('toString', () => {
             input: faultyToString,
             received: 'Object',
             message: 'Invalid string: Received Object',
-            requirement: undefined,
-            path: undefined,
-            issues: undefined,
-            lang: undefined,
-            abortEarly: undefined,
-            abortPipeEarly: undefined,
           },
         ],
       });

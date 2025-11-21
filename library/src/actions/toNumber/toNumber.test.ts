@@ -6,14 +6,28 @@ import {
 } from './toNumber.ts';
 
 describe('toNumber', () => {
-  test('should return action object', () => {
-    expect(toNumber()).toStrictEqual({
-      kind: 'transformation',
-      type: 'to_number',
-      reference: toNumber,
-      async: false,
-      '~run': expect.any(Function),
-    } satisfies ToNumberAction<unknown>);
+  describe('should return action object', () => {
+    test('without message', () => {
+      expect(toNumber()).toStrictEqual({
+        kind: 'transformation',
+        type: 'to_number',
+        reference: toNumber,
+        async: false,
+        message: undefined,
+        '~run': expect.any(Function),
+      } satisfies ToNumberAction<unknown, undefined>);
+    });
+
+    test('with message', () => {
+      expect(toNumber('message')).toStrictEqual({
+        kind: 'transformation',
+        type: 'to_number',
+        reference: toNumber,
+        async: false,
+        message: 'message',
+        '~run': expect.any(Function),
+      } satisfies ToNumberAction<unknown, string>);
+    });
   });
 
   describe('should transform to number', () => {
@@ -53,15 +67,6 @@ describe('toNumber', () => {
         value: 0,
       });
     });
-
-    test('for undefined', () => {
-      expect(
-        action['~run']({ typed: true, value: undefined }, {})
-      ).toStrictEqual({
-        typed: true,
-        value: Number.NaN,
-      });
-    });
   });
   describe('should return dataset with issues', () => {
     const action = toNumber();
@@ -72,9 +77,33 @@ describe('toNumber', () => {
       kind: 'transformation',
       type: 'to_number',
       expected: null,
+      requirement: undefined,
+      path: undefined,
+      issues: undefined,
+      lang: undefined,
+      abortEarly: undefined,
+      abortPipeEarly: undefined,
     };
 
-    test('for invalid inputs', () => {
+    // Primitive types
+
+    test('for undefined', () => {
+      const value = undefined;
+      expect(action['~run']({ typed: true, value }, {})).toStrictEqual({
+        typed: false,
+        value: NaN,
+        issues: [
+          {
+            ...baseIssue,
+            input: NaN,
+            received: 'NaN',
+            message: 'Invalid number: Received NaN',
+          },
+        ],
+      });
+    });
+
+    test('for symbols', () => {
       const value = Symbol();
       expect(action['~run']({ typed: true, value }, {})).toStrictEqual({
         typed: false,
@@ -85,12 +114,107 @@ describe('toNumber', () => {
             input: value,
             received: 'symbol',
             message: 'Invalid number: Received symbol',
-            requirement: undefined,
-            path: undefined,
-            issues: undefined,
-            lang: undefined,
-            abortEarly: undefined,
-            abortPipeEarly: undefined,
+          },
+        ],
+      });
+    });
+
+    // Invalid strings
+
+    test('for invalid strings', () => {
+      const value = 'abc';
+      expect(action['~run']({ typed: true, value }, {})).toStrictEqual({
+        typed: false,
+        value: NaN,
+        issues: [
+          {
+            ...baseIssue,
+            input: NaN,
+            received: 'NaN',
+            message: 'Invalid number: Received NaN',
+          },
+        ],
+      });
+    });
+
+    test('for partially numeric strings', () => {
+      const value = '123abc';
+      expect(action['~run']({ typed: true, value }, {})).toStrictEqual({
+        typed: false,
+        value: NaN,
+        issues: [
+          {
+            ...baseIssue,
+            input: NaN,
+            received: 'NaN',
+            message: 'Invalid number: Received NaN',
+          },
+        ],
+      });
+    });
+
+    // Complex types
+
+    test('for arrays with multiple elements', () => {
+      const value = [1, 2];
+      expect(action['~run']({ typed: true, value }, {})).toStrictEqual({
+        typed: false,
+        value: NaN,
+        issues: [
+          {
+            ...baseIssue,
+            input: NaN,
+            received: 'NaN',
+            message: 'Invalid number: Received NaN',
+          },
+        ],
+      });
+    });
+
+    test('for functions', () => {
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      const value = () => {};
+      expect(action['~run']({ typed: true, value }, {})).toStrictEqual({
+        typed: false,
+        value: NaN,
+        issues: [
+          {
+            ...baseIssue,
+            input: NaN,
+            received: 'NaN',
+            message: 'Invalid number: Received NaN',
+          },
+        ],
+      });
+    });
+
+    test('for objects', () => {
+      const value = {};
+      expect(action['~run']({ typed: true, value }, {})).toStrictEqual({
+        typed: false,
+        value: NaN,
+        issues: [
+          {
+            ...baseIssue,
+            input: NaN,
+            received: 'NaN',
+            message: 'Invalid number: Received NaN',
+          },
+        ],
+      });
+    });
+
+    test('for invalid dates', () => {
+      const value = new Date('invalid');
+      expect(action['~run']({ typed: true, value }, {})).toStrictEqual({
+        typed: false,
+        value: NaN,
+        issues: [
+          {
+            ...baseIssue,
+            input: NaN,
+            received: 'NaN',
+            message: 'Invalid number: Received NaN',
           },
         ],
       });

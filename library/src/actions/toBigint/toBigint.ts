@@ -6,13 +6,10 @@ import type {
 } from '../../types/index.ts';
 import { _addIssue } from '../../utils/index.ts';
 
-type BigIntInput = Parameters<typeof BigInt>[0];
-
 /**
  * To bigint issue interface.
  */
-export interface ToBigintIssue<TInput extends BigIntInput>
-  extends BaseIssue<TInput> {
+export interface ToBigintIssue<TInput> extends BaseIssue<TInput> {
   /**
    * The issue kind.
    */
@@ -31,7 +28,7 @@ export interface ToBigintIssue<TInput extends BigIntInput>
  * To bigint action interface.
  */
 export interface ToBigintAction<
-  TInput extends BigIntInput,
+  TInput,
   TMessage extends ErrorMessage<ToBigintIssue<TInput>> | undefined,
 > extends BaseTransformation<TInput, bigint, ToBigintIssue<TInput>> {
   /**
@@ -53,10 +50,7 @@ export interface ToBigintAction<
  *
  * @returns A to bigint action.
  */
-export function toBigint<TInput extends BigIntInput>(): ToBigintAction<
-  TInput,
-  undefined
->;
+export function toBigint<TInput>(): ToBigintAction<TInput, undefined>;
 
 /**
  * Creates a to bigint transformation action.
@@ -66,17 +60,14 @@ export function toBigint<TInput extends BigIntInput>(): ToBigintAction<
  * @returns A to bigint action.
  */
 export function toBigint<
-  TInput extends BigIntInput,
+  TInput,
   const TMessage extends ErrorMessage<ToBigintIssue<TInput>> | undefined,
 >(message: TMessage): ToBigintAction<TInput, TMessage>;
 
 // @__NO_SIDE_EFFECTS__
 export function toBigint(
-  message?: ErrorMessage<ToBigintIssue<BigIntInput>>
-): ToBigintAction<
-  BigIntInput,
-  ErrorMessage<ToBigintIssue<BigIntInput>> | undefined
-> {
+  message?: ErrorMessage<ToBigintIssue<unknown>>
+): ToBigintAction<unknown, ErrorMessage<ToBigintIssue<unknown>> | undefined> {
   return {
     kind: 'transformation',
     type: 'to_bigint',
@@ -85,13 +76,14 @@ export function toBigint(
     message,
     '~run'(dataset, config) {
       try {
+        // @ts-expect-error
         dataset.value = BigInt(dataset.value);
       } catch {
         _addIssue(this, 'bigint', dataset, config);
         // @ts-expect-error
         dataset.typed = false;
       }
-      return dataset as OutputDataset<bigint, ToBigintIssue<BigIntInput>>;
+      return dataset as OutputDataset<bigint, ToBigintIssue<unknown>>;
     },
   };
 }

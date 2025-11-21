@@ -8,11 +8,13 @@ import {
 
 describe('toNumber', () => {
   test('should return action object', () => {
-    expectTypeOf(toNumber<'123'>()).toEqualTypeOf<ToNumberAction<'123'>>();
+    expectTypeOf(toNumber<'123'>()).toEqualTypeOf<
+      ToNumberAction<'123', undefined>
+    >();
   });
 
   describe('should infer correct types', () => {
-    type Action = ToNumberAction<'123'>;
+    type Action = ToNumberAction<'123', undefined>;
 
     test('of input', () => {
       expectTypeOf<InferInput<Action>>().toEqualTypeOf<'123'>();
