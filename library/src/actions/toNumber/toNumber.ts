@@ -49,6 +49,8 @@ export interface ToNumberAction<
  * Creates a to number transformation action.
  *
  * @returns A to number action.
+ *
+ * @beta
  */
 export function toNumber<TInput>(): ToNumberAction<TInput, undefined>;
 
@@ -58,6 +60,8 @@ export function toNumber<TInput>(): ToNumberAction<TInput, undefined>;
  * @param message The error message.
  *
  * @returns A to number action.
+ *
+ * @beta
  */
 export function toNumber<
   TInput,

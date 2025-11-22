@@ -19,6 +19,8 @@ export interface ToBooleanAction<TInput>
  * Creates a to boolean transformation action.
  *
  * @returns A to boolean action.
+ *
+ * @beta
  */
 // @__NO_SIDE_EFFECTS__
 export function toBoolean<TInput>(): ToBooleanAction<TInput> {

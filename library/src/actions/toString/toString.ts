@@ -49,6 +49,8 @@ export interface ToStringAction<
  * Creates a to string transformation action.
  *
  * @returns A to string action.
+ *
+ * @beta
  */
 export function toString<TInput>(): ToStringAction<TInput, undefined>;
 
@@ -58,6 +60,8 @@ export function toString<TInput>(): ToStringAction<TInput, undefined>;
  * @param message The error message.
  *
  * @returns A to string action.
+ *
+ * @beta
  */
 export function toString<
   TInput,

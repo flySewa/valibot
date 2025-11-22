@@ -49,6 +49,8 @@ export interface ToBigintAction<
  * Creates a to bigint transformation action.
  *
  * @returns A to bigint action.
+ *
+ * @beta
  */
 export function toBigint<TInput>(): ToBigintAction<TInput, undefined>;
 
@@ -58,6 +60,8 @@ export function toBigint<TInput>(): ToBigintAction<TInput, undefined>;
  * @param message The error message.
  *
  * @returns A to bigint action.
+ *
+ * @beta
  */
 export function toBigint<
   TInput,

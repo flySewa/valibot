@@ -49,6 +49,8 @@ export interface ToDateAction<
  * Creates a to date transformation action.
  *
  * @returns A to date action.
+ *
+ * @beta
  */
 export function toDate<TInput>(): ToDateAction<TInput, undefined>;
 
@@ -58,6 +60,8 @@ export function toDate<TInput>(): ToDateAction<TInput, undefined>;
  * @param message The error message.
  *
  * @returns A to date action.
+ *
+ * @beta
  */
 export function toDate<
   TInput,
