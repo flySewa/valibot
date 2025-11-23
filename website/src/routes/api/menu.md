@@ -449,6 +449,8 @@
 - [Ipv4Issue](/api/Ipv4Issue/)
 - [Ipv6Action](/api/Ipv6Action/)
 - [Ipv6Issue](/api/Ipv6Issue/)
+- [IsbnAction](/api/IsbnAction/)
+- [IsbnIssue](/api/IsbnIssue/)
 - [IsoDateAction](/api/IsoDateAction/)
 - [IsoDateIssue](/api/IsoDateIssue/)
 - [IsoDateTimeAction](/api/IsoDateTimeAction/)
