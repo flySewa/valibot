@@ -49,6 +49,7 @@ export const properties: Record<string, PropertyProps> = {
     type: {
       type: 'custom',
       name: 'InferExamples',
+      href: '../InferExamples/',
       generics: [
         {
           type: 'custom',

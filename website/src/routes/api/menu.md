@@ -399,6 +399,7 @@
 - [IncludesIssue](/api/IncludesIssue/)
 - [InferDefault](/api/InferDefault/)
 - [InferDefaults](/api/InferDefaults/)
+- [InferExamples](/api/InferExamples/)
 - [InferFallback](/api/InferFallback/)
 - [InferFallbacks](/api/InferFallbacks/)
 - [InferInput](/api/InferInput/)
