@@ -52,12 +52,13 @@ Each has its own folder: `name.ts`, `name.test.ts`, `name.test-d.ts`, `index.ts`
 
 See `/prompts/index.md` for task-specific instructions:
 
-| Task                          | Guide                                 |
-| ----------------------------- | ------------------------------------- |
-| Navigate repo, find files     | `prompts/repository-structure.md`     |
-| Write JSDoc / inline comments | `prompts/document-source-code.md`     |
-| Add new API page to website   | `prompts/add-new-api-to-website.md`   |
-| Update existing API docs      | `prompts/update-api-on-website.md`    |
-| Add guide/tutorial to website | `prompts/add-new-guide-to-website.md` |
+| Task                          | Guide                                   |
+| ----------------------------- | --------------------------------------- |
+| Navigate repo, find files     | `prompts/repository-structure.md`       |
+| Write JSDoc / inline comments | `prompts/document-source-code.md`       |
+| Review PRs and source changes | `prompts/review-source-code-changes.md` |
+| Add new API page to website   | `prompts/add-new-api-to-website.md`     |
+| Update existing API docs      | `prompts/update-api-on-website.md`      |
+| Add guide/tutorial to website | `prompts/add-new-guide-to-website.md`   |
 
 **Source code is the single source of truth.** All documentation must match `/library/src/`.
