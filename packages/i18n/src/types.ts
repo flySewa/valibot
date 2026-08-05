@@ -26,11 +26,13 @@ export type Language = {
     | 'pt'
     | 'ro'
     | 'ru'
+    | 'rw'
     | 'sk'
     | 'sl'
     | 'sv'
     | 'tr'
     | 'uk'
+    | 'uz'
     | 'vi'
     | 'zh-CN'
     | 'zh-TW';

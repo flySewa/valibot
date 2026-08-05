@@ -103,6 +103,12 @@ export const ISO_DATE_TIME_REGEX: RegExp =
   /^\d{4}-(?:0[1-9]|1[0-2])-(?:[12]\d|0[1-9]|3[01])[T ](?:0\d|1\d|2[0-3]):[0-5]\d$/u;
 
 /**
+ * [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date-time with seconds regex.
+ */
+export const ISO_DATE_TIME_SECOND_REGEX: RegExp =
+  /^\d{4}-(?:0[1-9]|1[0-2])-(?:[12]\d|0[1-9]|3[01])[T ](?:0\d|1\d|2[0-3])(?::[0-5]\d){2}$/u;
+
+/**
  * [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) time regex.
  */
 export const ISO_TIME_REGEX: RegExp = /^(?:0\d|1\d|2[0-3]):[0-5]\d$/u;
@@ -141,6 +147,11 @@ export const JWS_COMPACT_REGEX: RegExp =
  */
 export const ISRC_REGEX: RegExp =
   /^(?:[A-Z]{2}[A-Z\d]{3}\d{7}|[A-Z]{2}-[A-Z\d]{3}-\d{2}-\d{5})$/u;
+
+/**
+ * [KSUID](https://github.com/segmentio/ksuid) regex.
+ */
+export const KSUID_REGEX: RegExp = /^[a-zA-Z0-9]{27}$/u;
 
 /**
  * [MAC](https://en.wikipedia.org/wiki/MAC_address) 48 bit regex.
