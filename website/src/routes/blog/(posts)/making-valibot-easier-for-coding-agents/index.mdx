@@ -25,11 +25,13 @@ Install it with one command.
 npx skills add open-circle/agent-skills --skill valibot
 ```
 
+We recommend installing it, and being specific in prompts. When there are multiple valid ways to implement something, a model will usually choose the approach it has seen most often. Giving it the intended direction helps it produce the result you want.
+
 ## An MCP server
 
 Our MCP server gives coding agents direct access to the Valibot documentation while they work. When an agent needs information about a specific part of the library, it can search the docs and retrieve the relevant page instead of relying only on its training data or loading unrelated documentation.
 
-We run one at https://valibot.dev/mcp. It is free to use and doesn't require authentication.
+We run one at `https://valibot.dev/mcp`. It is free to use and doesn't require authentication.
 
 Add it to Claude Code with this:
 
@@ -49,7 +51,11 @@ For Cursor and other tools that use a JSON configuration file, add this entry:
 }
 ```
 
-The server provides three tools. `search_docs` searches the guides, API reference, and blog and returns matching pages. `get_doc` reads a specific page and returns it as Markdown. `list_docs` returns all available documentation grouped by area and category.
+The server provides three tools.
+
+- `search_docs` searches the guides, API reference, and blog and returns matching pages
+- `get_doc` reads a specific page and returns it as Markdown
+- `list_docs` returns all available documentation grouped by area and category
 
 ## Markdown for every page
 
@@ -86,7 +92,5 @@ Documentation is one part of making a library easier for coding agents to use. T
 Valibot is built around a small set of primitives that are used throughout the library. Once a model understands how schemas and actions fit together, it can apply those same patterns across the API.
 
 This is one of the reasons we think Valibot works well with coding agents. The library has a consistent structure that gives models fewer concepts to learn when generating code.
-
-We still recommend being specific in prompts. When there are multiple valid ways to implement something, a model will usually choose the approach it has seen most often. Giving it the intended direction helps it produce the result you want.
 
 Everything above is available on the <Link href="/guides/coding-agents/">coding agents page</Link>. [Formisch](https://formisch.dev/), our form library, also has the same setup if you're using it.
