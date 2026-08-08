@@ -23,7 +23,7 @@ We also found five pages that nothing linked to. `ltValue`, `LastTupleItem`, `Re
 
 When your agent fetches a documentation page, it gets the navigation, the scripts and the styling along with it, and pays for all of that in context without using any of it. So we now publish a Markdown version of every page, with the same content and none of the rest. Your agent can read several of them for what one page used to cost.
 
-We also added an `X-Markdown-Tokens` header to every Markdown response, so a tool can check what a page costs before loading it. API pages keep their full type signatures, and the links between pages point at Markdown, so an agent that opens `pipe` and follows a reference to `transform` never has to switch formats.
+We also added an `X-Markdown-Tokens` header to every Markdown response, so a tool can check what a page costs before loading it. API pages keep their full type signatures, and the links between pages point at Markdown, so an agent following a reference from one page to another never has to switch formats.
 
 ## LLMs.txt tells an agent what exists
 
@@ -65,7 +65,7 @@ For Cursor and other tools that use a JSON configuration file, add this entry:
 }
 ```
 
-Your agent makes one tool call instead of several requests. When it needs to know what `pipe` accepts, it asks for that page and gets it, instead of pulling three unrelated pages first.
+Your agent makes one tool call instead of several requests. When it needs a specific page, it asks for that page and gets it, instead of pulling three unrelated ones first.
 
 ## The whole site is static now
 
@@ -77,6 +77,6 @@ Thanks to the [ZanReal](https://zanreal.com/) team for making that possible. The
 
 We think a lot of this works because of how Valibot is built, which is the part we didn't have to change.
 
-Valibot is made of schemas, actions and methods, and all three are plain objects. There's no class hierarchy to follow and no inherited methods to discover. Once a model understands how a schema and an action fit together it can apply that same shape across the whole API, because `string` and `number` compose with `minLength` and `email` the same way `object` composes with `partial`. That's one pattern to learn instead of one per data type.
+Valibot is made of schemas, actions and methods, and all three are plain objects. There's no class hierarchy to follow and no inherited methods to discover. Once a model understands how a schema and an action fit together, it can apply that same shape across the whole API. That's one pattern to learn instead of one per data type.
 
 Everything above is on the <Link href="/guides/coding-agents/">coding agents page</Link>. [Formisch](https://formisch.dev/), our form library, has the same setup if you're using it.
