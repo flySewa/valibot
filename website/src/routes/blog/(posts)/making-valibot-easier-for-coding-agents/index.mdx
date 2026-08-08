@@ -9,29 +9,43 @@ authors:
 
 import { Link } from '~/components';
 
-We assume a lot of people use coding agents when they're building with Valibot, so we spent the last few weeks reworking the documentation to make it easier for agents to use.
+We assume a lot of people use coding agents when they're building with Valibot, so we spent the last few weeks reworking the documentation for them.
 
-While coding agents already generate most Valibot schemas correctly from their training data, we still found areas where improving the documentation helps them produce more accurate results when working with the library.
+Agents already write most Valibot schemas correctly from their training data. The problems we found were around function names that no longer matched, pages that nothing linked to, and how much context a single page costs to read. A lot of our work went into those.
 
-Most of the work fell into a few areas.
+## The API reference now matches the library
 
-## An agent skill
+The API reference is the first place an agent looks, so we checked it against the source. We corrected 28 files, covering function names that no longer matched, invalid links and outdated menu entries.
 
-An agent skill gives coding agents the context they need to work with Valibot more accurately. It uses the current API and includes the patterns we recommend, so the code an agent writes matches the examples and approaches in our guides.
+We also found five pages that nothing linked to. `ltValue`, `LastTupleItem`, `Reference`, `VariantOption` and `VariantOptionAsync` were all written and published, but an agent working through the menu had no way of knowing they existed. We've listed them now. Ask an agent about `VariantOption` today and it reads the page instead of guessing.
 
-Install it with one command.
+## Every page is now available as Markdown
+
+When your agent fetches a documentation page, it gets the navigation, the scripts and the styling along with it, and pays for all of that in context without using any of it. So we now publish a Markdown version of every page, with the same content and none of the rest. Your agent can read several of them for what one page used to cost.
+
+We also added an `X-Markdown-Tokens` header to every Markdown response, so a tool can check what a page costs before loading it. API pages keep their full type signatures, and the links between pages point at Markdown, so an agent that opens `pipe` and follows a reference to `transform` never has to switch formats.
+
+## LLMs.txt tells an agent what exists
+
+`llms.txt` lists every page in one place, so a model can see what documentation exists before it spends anything reading it.
+
+We publish a few other shapes as well, since one file doesn't suit every tool. `llms-full.txt` is the entire documentation in a single file. For something narrower, `llms-guides.txt` covers the guides, `llms-api.txt` the API reference, and `llms-blog.txt` the blog. Every Markdown page also links back to its HTML page and to `llms.txt`, so an agent that opens one page can find the other 800.
+
+## An agent skill you install once
+
+The skill loads the current API and the patterns we recommend at the start of the session, so the code your agent writes follows the examples in our guides. We think it's the most useful thing here for most people.
 
 ```bash
 npx skills add open-circle/agent-skills --skill valibot
 ```
 
-We recommend installing it, and being specific in prompts. When there are multiple valid ways to implement something, a model will usually choose the approach it has seen most often. Giving it the intended direction helps it produce the result you want.
+## An MCP server for direct lookups
 
-## An MCP server
+We run an MCP server at `https://valibot.dev/mcp`. It's free, needs no authentication, and gives your agent three tools:
 
-Our MCP server gives coding agents direct access to the Valibot documentation while they work. When an agent needs information about a specific part of the library, it can search the docs and retrieve the relevant page instead of relying only on its training data or loading unrelated documentation.
-
-We run one at `https://valibot.dev/mcp`. It is free to use and doesn't require authentication.
+- `search_docs` searches the guides, API reference and blog and returns matching pages
+- `get_doc` reads a specific page and returns it as Markdown
+- `list_docs` returns all available documentation grouped by area and category
 
 Add it to Claude Code with this:
 
@@ -51,46 +65,18 @@ For Cursor and other tools that use a JSON configuration file, add this entry:
 }
 ```
 
-The server provides three tools.
+Your agent makes one tool call instead of several requests. When it needs to know what `pipe` accepts, it asks for that page and gets it, instead of pulling three unrelated pages first.
 
-- `search_docs` searches the guides, API reference, and blog and returns matching pages
-- `get_doc` reads a specific page and returns it as Markdown
-- `list_docs` returns all available documentation grouped by area and category
+## The whole site is static now
 
-## Markdown for every page
+None of this helps much if the pages are slow, so every page is generated ahead of time and served as a file. That's more than 800 pre-rendered pages, with a time to first byte of around 80 ms from the edge cache. Agents tend to pull several pages while working through one task, so it adds up.
 
-Every Valibot documentation page is available as Markdown, so agents get the API details, examples, and guides in a format that is easier to process.
+Thanks to the [ZanReal](https://zanreal.com/) team for making that possible. They wrote about the [migration](https://zanreal.com/case-studies/valibot-formisch-static-docs) if you want the detail.
 
-An HTML page carries navigation, scripts, and styling that an agent pays for and doesn't need. The Markdown version is the documentation on its own, so the same page costs a fraction of the context and an agent can read several pages for what one used to cost. Every response includes an `X-Markdown-Tokens` header with an estimated token count, so tools can check the size of a page before adding it.
+## The API design helps too
 
-API reference pages include their full type signatures in the Markdown, and links between pages stay within Markdown so an agent can continue following documentation without switching formats.
+We think a lot of this works because of how Valibot is built, which is the part we didn't have to change.
 
-## LLMs.txt
+Valibot is made of schemas, actions and methods, and all three are plain objects. There's no class hierarchy to follow and no inherited methods to discover. Once a model understands how a schema and an action fit together it can apply that same shape across the whole API, because `string` and `number` compose with `minLength` and `email` the same way `object` composes with `partial`. That's one pattern to learn instead of one per data type.
 
-LLMs.txt gives coding agents a map of the Valibot documentation. It lists the available pages in one place, so an agent can understand what documentation exists before deciding what to read.
-
-We also publish the documentation in other shapes. `llms-full.txt` is the entire documentation in a single file. For narrower slices, `llms-guides.txt` covers the guides, `llms-api.txt` the API reference, and `llms-blog.txt` the blog posts.
-
-Every Markdown page also links back to the canonical HTML page and `llms.txt`, so an agent that starts from a single page can discover the rest of the documentation.
-
-## A more accurate API reference
-
-The API reference is one of the main places agents look when working with Valibot, so we made sure it matches the library itself. We corrected function names, links, and menu entries that didn't match the library, and added API pages that existed but were not previously listed.
-
-An agent reading the reference now gets the current API names and can reach every available page.
-
-## A fully static documentation site
-
-Every documentation page is generated ahead of time and served as a static file. More than 800 pages are pre-rendered, with a time to first byte of around 80 ms from the edge cache. Coding agents often retrieve multiple documents while working through a single task, so keeping those requests fast makes a difference.
-
-Thanks to the ZanReal team for making this possible. They wrote about the [migration](https://zanreal.com/case-studies/valibot-formisch-static-docs) if you're interested in how it works.
-
-## API design matters too
-
-Documentation is one part of making a library easier for coding agents to use. The API design matters too. We think models do better when there are fewer concepts to keep track of and more patterns they can reuse.
-
-Valibot is built around a small set of primitives that are used throughout the library. Once a model understands how schemas and actions fit together, it can apply those same patterns across the API.
-
-This is one of the reasons we think Valibot works well with coding agents. The library has a consistent structure that gives models fewer concepts to learn when generating code.
-
-Everything above is available on the <Link href="/guides/coding-agents/">coding agents page</Link>. [Formisch](https://formisch.dev/), our form library, also has the same setup if you're using it.
+Everything above is on the <Link href="/guides/coding-agents/">coding agents page</Link>. [Formisch](https://formisch.dev/), our form library, has the same setup if you're using it.
