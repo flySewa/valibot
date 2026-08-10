@@ -13,38 +13,6 @@ We assume a lot of people use coding agents when they're building with Valibot, 
 
 Agents already write most Valibot schemas correctly from their training data. The problems we found were around function names that no longer matched, pages that nothing linked to, and how much context a single page costs to read. A lot of our work went into those.
 
-## The API reference now matches the library
-
-The API reference is the first place an agent looks, so we checked it against the source. We corrected 28 files, covering function names that no longer matched, invalid links and outdated menu entries.
-
-We also found five pages that nothing linked to. `ltValue`, `LastTupleItem`, `Reference`, `VariantOption` and `VariantOptionAsync` were all written and published, but an agent working through the menu had no way of knowing they existed. We've listed them now. Ask an agent about `VariantOption` today and it reads the page instead of guessing.
-
-## The Markdown is generated from the page now
-
-We were already publishing a `.md` file for every page, but it was a copy of the source file, and our source files have components in them. Where the page showed a full type signature or a list of related links, the `.md` file just had the tag that produces them, so an agent reading it got less than you would. Now the Markdown is generated the way the page is, with those components turned into content.
-
-That's worth having because of what an HTML page carries. When your agent fetches one it gets the navigation, the scripts and the styling along with it, and pays for all of that in context without using any of it. The Markdown version has the content and none of the rest, so your agent can read several pages for what one used to cost.
-
-We also added an `X-Markdown-Tokens` header to every Markdown response, so a tool can check what a page costs before loading it. API pages keep their full type signatures, and the links between pages point at Markdown, so an agent following a reference from one page to another never has to switch formats.
-
-## Every page now points to llms.txt
-
-We'd been publishing `llms.txt` for a while, and nothing on the site pointed at it, so an agent had to already know it was there. Every Markdown page now links back to it and to its own HTML page, and the file opens with a summary saying what's in it and where the rest of the files are.
-
-We publish a few other shapes as well, since one file doesn't suit every tool. `llms-full.txt` is the entire documentation in a single file. For something narrower, `llms-guides.txt` covers the guides, `llms-api.txt` the API reference, and `llms-blog.txt` the blog.
-
-## Agents can find the skill now
-
-The skill loads the current API and the patterns we recommend at the start of the session, so the code your agent writes follows the examples in our guides. We think it's the most useful thing here for most people.
-
-It lives in `open-circle/agent-skills`, and until recently that was the only place it lived. Nothing on valibot.dev served it or linked to it, so you had to know the repo existed to point your agent at it. The site now publishes it at `/.well-known/agent-skills/valibot/SKILL.md` and lists it in a discovery index, so an agent looking for one can find it without being told.
-
-Installing is still one command.
-
-```bash
-npx skills add open-circle/agent-skills --skill valibot
-```
-
 ## We now run an MCP server
 
 It's at `https://valibot.dev/mcp`, free, needs no authentication, and gives your agent three tools:
@@ -72,6 +40,38 @@ For Cursor and other tools that use a JSON configuration file, add this entry:
 ```
 
 Your agent makes one tool call instead of several requests. When it needs a specific page, it asks for that page and gets it, instead of pulling three unrelated ones first.
+
+## Agents can find the skill now
+
+The skill loads the current API and the patterns we recommend at the start of the session, so the code your agent writes follows the examples in our guides. We think it's the most useful thing here for most people.
+
+It lives in `open-circle/agent-skills`, and until recently that was the only place it lived. Nothing on valibot.dev served it or linked to it, so you had to know the repo existed to point your agent at it. The site now publishes it at `/.well-known/agent-skills/valibot/SKILL.md` and lists it in a discovery index, so an agent looking for one can find it without being told.
+
+Installing is still one command.
+
+```bash
+npx skills add open-circle/agent-skills --skill valibot
+```
+
+## The Markdown is generated from the page now
+
+We were already publishing a `.md` file for every page, but it was a copy of the source file, and our source files have components in them. Where the page showed a full type signature or a list of related links, the `.md` file just had the tag that produces them, so an agent reading it got less than you would. Now the Markdown is generated the way the page is, with those components turned into content.
+
+That's worth having because of what an HTML page carries. When your agent fetches one it gets the navigation, the scripts and the styling along with it, and pays for all of that in context without using any of it. The Markdown version has the content and none of the rest, so your agent can read several pages for what one used to cost.
+
+We also added an `X-Markdown-Tokens` header to every Markdown response, so a tool can check what a page costs before loading it. API pages keep their full type signatures, and the links between pages point at Markdown, so an agent following a reference from one page to another never has to switch formats.
+
+## Every page now points to llms.txt
+
+We'd been publishing `llms.txt` for a while, and nothing on the site pointed at it, so an agent had to already know it was there. Every Markdown page now links back to it and to its own HTML page, and the file opens with a summary saying what's in it and where the rest of the files are.
+
+We publish a few other shapes as well, since one file doesn't suit every tool. `llms-full.txt` is the entire documentation in a single file. For something narrower, `llms-guides.txt` covers the guides, `llms-api.txt` the API reference, and `llms-blog.txt` the blog.
+
+## The API reference now matches the library
+
+The API reference is the first place an agent looks, so we checked it against the source. We corrected 28 files, covering function names that no longer matched, invalid links and outdated menu entries.
+
+We also found five pages that nothing linked to. `ltValue`, `LastTupleItem`, `Reference`, `VariantOption` and `VariantOptionAsync` were all written and published, but an agent working through the menu had no way of knowing they existed. We've listed them now. Ask an agent about `VariantOption` today and it reads the page instead of guessing.
 
 ## The whole site is static now
 
