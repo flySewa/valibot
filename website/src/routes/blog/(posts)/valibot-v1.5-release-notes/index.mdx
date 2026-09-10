@@ -12,10 +12,12 @@ authors:
 ---
 
 import { Link } from '~/components';
+import SchemaConstructionDark from './schema-construction-dark.webp?jsx';
+import SchemaConstructionLight from './schema-construction-light.webp?jsx';
 
 Valibot v1.5 is here with a major improvement to schema construction speed, new ways to measure strings, a new identifier format, and tighter validation across several actions and schemas.
 
-Huge thanks to [@tats-u](https://github.com/tats-u), [@idleberg](https://github.com/idleberg), [@mahirhir](https://github.com/mahirhir), [@MaxFreedomPollard](https://github.com/MaxFreedomPollard), [@yslpn](https://github.com/yslpn), and _[etc.]_ for their contributions.
+Huge thanks to [@tats-u](https://github.com/tats-u), [@idleberg](https://github.com/idleberg), [@mahirhir](https://github.com/mahirhir), [@MaxFreedomPollard](https://github.com/MaxFreedomPollard), [@yslpn](https://github.com/yslpn), [@francisjohnjohnston-web](https://github.com/francisjohnjohnston-web), [@LeSingh1](https://github.com/LeSingh1), [@ItzXynx](https://github.com/ItzXynx), [@spokodev](https://github.com/spokodev), [@sanjibani](https://github.com/sanjibani), [@ysknsid25](https://github.com/ysknsid25), and [@cyyynthia](https://github.com/cyyynthia) for their code contributions, bug reports, reviews, and helpful discussions.
 
 ## What's new
 
@@ -28,13 +30,20 @@ Huge thanks to [@tats-u](https://github.com/tats-u), [@idleberg](https://github.
 
 Schemas defined at module scope are constructed when their modules are evaluated, so applications with many schemas can spend more time building them during startup.
 
-Valibot schemas expose Standard Schema properties so they can be used interchangeably with other validation libraries. In v1.4.2, those properties were built the first time they were accessed and stored in a `WeakMap`. That added a lookup whenever the properties were needed, and the cache grew as more schemas were created. Valibot v1.5 attaches the properties when each schema is created instead, so the `WeakMap` is gone along with the extra indirection.
+Valibot schemas expose Standard Schema properties so they can be used interchangeably with other validation libraries. In v1.4.2, each schema exposed those properties through a getter that built them on first access and cached them in a `WeakMap`. Every subsequent access called the getter again and looked up the cached properties, and the cache grew as more schemas were accessed. Valibot v1.5 attaches the properties directly when each schema is created, removing both the getter and the `WeakMap` lookup.
 
 The difference is especially noticeable on a fresh start, where reducing the time spent on each schema reduces the amount of work the application has to finish before it can respond. Open Circle's Schema Benchmarks show the effect clearly, with the initialization benchmark dropping from about 57 µs in v1.4.2 to about 2.7 µs in v1.5.0.
 
 For comparison, the same benchmark puts Zod 4.5 at about 208 µs for the same schema, compared with 2.7 µs for Valibot. That makes Valibot's schema construction roughly 77 times faster than Zod's in this benchmark.
 
-_[Insert graphic.]_
+<SchemaConstructionDark
+  alt="Schema construction time: Zod 4.5 takes 208 µs and Valibot 1.5 takes 2.7 µs. Less is better."
+  class="hidden dark:block"
+/>
+<SchemaConstructionLight
+  alt="Schema construction time: Zod 4.5 takes 208 µs and Valibot 1.5 takes 2.7 µs. Less is better."
+  class="dark:hidden"
+/>
 
 ## Unicode-aware string length validation
 
@@ -143,7 +152,9 @@ A few other changes address edge cases that could produce surprising results in 
 
 ## What's next?
 
-_[Insert roadmap.]_
+Next, we are preparing a new minor release of `@valibot/to-json-schema` with support for `ksuid`, more flexible metadata handling, and fixes that improve the accuracy of generated JSON Schemas.
+
+We are also looking ahead to Valibot v1.6. The current roadmap includes easier recursive schemas, new validators for formats such as Base64url and cron expressions, and further performance improvements. We will share the final feature set as the release takes shape.
 
 If there is a validator, transformation, or guide you would like to see next, let us know on [Discord](https://discord.gg/w5mRTETqzv) or open a discussion on [GitHub](https://github.com/open-circle/valibot/discussions).
 
